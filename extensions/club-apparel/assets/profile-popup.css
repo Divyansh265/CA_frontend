@@ -1,0 +1,414 @@
+/* new css here */
+
+
+
+.profile-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.profile-modal-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    padding: 0;
+    box-shadow: #000000 0px 7px 29px 0px;
+    max-width: 479px;
+    width: 100%;
+    border-radius: 6px;
+}
+
+.close-profile-modal {
+    position: absolute;
+    top: -24px;
+    left: 100%;
+    cursor: pointer;
+    font-size: 20px;
+    background: black;
+    border-radius: 50%;
+    height: 32px;
+    width: 32px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* change this */
+
+
+p.profile-modal-heading {
+    text-align: center;
+    font-family: Acumin Variable Concept;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 36px;
+    text-align: center;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    padding: 36px 0 24px 0;
+    background-image: url('https://cdn.shopify.com/s/files/1/0651/5815/2438/files/ECOMM_1920x1080_2.png?v=1737456022');
+    background-repeat: repeat-x;
+    margin: 0;
+    border-top-left-radius: 6px;
+    border: none;
+    border-top-right-radius: 6px;
+}
+
+
+
+
+.profile-modal-subData {
+    text-align: center;
+    background-image: url('https://cdn.shopify.com/s/files/1/0651/5815/2438/files/ECOMM_1920x1080_1.png?v=1737456009');
+    background-repeat: round;
+    padding-top: 3.7rem;
+}
+
+.profile-modal-subData .rank-logo {
+    text-align: center;
+    max-width: 165px;
+    width: 100%;
+    height: 130px;
+    object-fit: contain;
+    margin: 0px auto;
+}
+
+.profile-modal-points {
+    font-family: Acumin Variable Concept;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 36px;
+    text-align: center;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    margin: 16px 0 0 0;
+}
+
+p.profile-modal-balance {
+    font-family: Acumin Variable Concept;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 19.2px;
+    text-align: center;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    color: #D0A661;
+    margin: 6px 0;
+}
+
+.profile-modal-ph {
+    font-family: Acumin Variable Concept;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 19.2px;
+    text-align: center;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+.profile-modal-dis-btn {
+    width: 397px;
+    height: 39px;
+    background: white;
+    color: black !important;
+    border: none;
+    margin: 33px 0 35px 0;
+    font-family: Acumin Variable Concept;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 19.2px;
+    text-align: center;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+/* Style for the range input track */
+.range-container {
+    position: relative;
+    width: 230px;
+    margin: 20px auto;
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    margin: 0;
+    background: #B1B1B1;
+    border-radius: 4px;
+    height: 4px;
+}
+
+input[type="range"]:focus {
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    height: 8px;
+    background: transparent;
+}
+
+input[type="range"]::-moz-range-track {
+    height: 8px;
+    background: transparent;
+}
+
+input[type="range"]::-ms-track {
+    height: 8px;
+    background: transparent;
+    border-color: transparent;
+    border-width: 8px 0;
+    color: transparent;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 20px;
+    width: 20px;
+    background: #D0A661;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    margin-top: -6px;
+}
+
+/* #rangeSlider {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    transform: scaleX(-1); 
+} */
+input[type="range"]::-moz-range-thumb {
+    height: 20px;
+    width: 20px;
+    background: #D0A661;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+input[type="range"]::-ms-thumb {
+    height: 20px;
+    width: 20px;
+    background: #D0A661;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Range Thumb for Webkit Browsers */
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 24px;
+    width: 24px;
+    background: #311F02;
+    border: 3px solid #D0A661;
+    /* Border color */
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -8px;
+    /* Align thumb with the track */
+    transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+/* Range Thumb for Firefox */
+input[type="range"]::-moz-range-thumb {
+    height: 24px;
+    width: 24px;
+    background: #311F02;
+    border: 3px solid #D0A661;
+    /* Border color */
+    border-radius: 50%;
+    cursor: pointer;
+    transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+/* Range Thumb for IE/Edge */
+input[type="range"]::-ms-thumb {
+    height: 24px;
+    width: 24px;
+    background: #311F02;
+    border: 3px solid #D0A661;
+    /* Border color */
+
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.tooltip {
+    position: absolute;
+    top: -30px;
+    left: 0;
+    background-color: #D0A661;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    text-align: center;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.range-container:hover .tooltip {
+    opacity: 1;
+}
+
+.rank-line {
+    height: 1px;
+    text-align: center;
+    width: 51%;
+    background: linear-gradient(to right, #242424, #B5B5B5, #242424);
+    margin: 14px auto;
+}
+
+.range-container:after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background-color: #CBA465;
+    position: absolute;
+    right: 0;
+    left: 10px;
+    top: calc(50% + 3px);
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 3px solid #CBA465;
+}
+
+span#modalPointBalance {
+    font-family: Acumin Variable Concept;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19.2px;
+    letter-spacing: 0%;
+    text-align: center;
+}
+
+.profile-modal-balance b {
+    font-family: Acumin Variable Concept;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19.2px;
+    letter-spacing: 0px;
+    text-align: center;
+}
+
+/* bugs resolve css */
+.profile-modal-ph {
+    margin: 0px;
+}
+
+.profile-modal-dis-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.popup-footer {
+    background: #FFF9AD1A;
+}
+
+.section-left p b,
+.section-right p b {
+    color: #2D2D2D;
+}
+
+.section-left p,
+.section-right p {
+    color: #2d2d2d;
+    margin: 0;
+}
+
+.otp-timer-section a {
+    text-decoration: underline;
+}
+
+.input-with-code input {
+    padding-left: 12px;
+}
+
+#applyDiscountBtn {
+    text-transform: capitalize;
+}
+
+.middle-sec button {
+    text-transform: capitalize;
+}
+
+.otp-timer-section p {
+    color: #2D2D2D;
+    font-weight: 300;
+    font-size: 14px;
+}
+
+label[for="popupEmail"] {
+    margin-top: 13px;
+}
+
+input#popupEmail {
+    margin-bottom: 30px;
+}
+
+#popupCreateCustomer label {
+    text-transform: capitalize;
+}
+
+#popupCreateCustomer button {
+    line-height: 1;
+}
+
+
+
+/*  */
+
+
+
+
+
+
+@media screen and (max-width: 767px) {
+    .profile-modal {
+        max-width: 100%;
+    }
+
+    p.profile-modal-heading {
+        font-size: 22px;
+        padding: 10px 0;
+    }
+
+    .profile-modal-points {
+        font-size: 24px;
+        line-height: 24px;
+        margin: 10px 0 0 0;
+    }
+
+    .range-container {
+        margin: 15px auto;
+    }
+
+    .profile-modal-dis-btn {
+        margin: 15px 0;
+        max-width: 250px;
+    }
+
+    .close-profile-modal {
+        top: 0px;
+        right: 0px;
+        left: unset;
+        background: transparent;
+
+    }
+}

@@ -1,0 +1,301 @@
+
+{{ 'cart-popup.css' | asset_url | stylesheet_tag }}
+{{ 'profile-popup.css' | asset_url | stylesheet_tag }}
+
+<div id="popup-overlay">
+        <div class="cart-popup">
+            <span id="closePopupBtn"><img src="https://cdn.shopify.com/s/files/1/0651/5815/2438/files/Group_601.png?v=1735545994"></span>
+            <div class="upper-sec">
+                <img src="https://cdn.shopify.com/s/files/1/0651/5815/2438/files/Group_8_2.png?v=1739509556" alt="Group 9">
+                <p class="heading">Welcome to</p>
+                <p class="sub-heading">CLUB APPAREL REWARDS</p>
+            </div>
+            <div class="middle-sec">
+                <div class="custom-input-wrapper">
+                    <label for="popupPhoneNumber">Enter Your Mobile Number</label>
+                    <div class="input-with-code">
+                        <span class="country-code-placeholder">+971</span>
+                        <input style="outline:none!important;border: 1px solid #CDCDCD!important; " class="popup-phone" type="text" id="popupPhoneNumber" placeholder="56xxxx89" maxlength="10"
+                            pattern="(50|52|54|55|56|58|59)\d{7}"   required>
+                        <span class="icon-1"><img src="https://cdn.shopify.com/s/files/1/0651/5815/2438/files/Vector.png?v=1735545994"></span>
+                    </div>
+                    
+                </div>
+
+                <div class="inp-otp custom-input-wrapper">
+                    <label for="popupOtp" >Enter Your OTP</label>
+                    <div class="input-with-code">
+                        <input style="outline:none!important;border: 1px solid #CDCDCD!important; " class="popup-otp" type="text" id="popup-otp" >
+                        <span class="icon-1"><img src="https://cdn.shopify.com/s/files/1/0651/5815/2438/files/Vector.png?v=1735545994"></span>
+                    </div>
+                
+                <div class="otp-timer-section">
+                    <p>Didn't receive OTP?  <a style="outline:none!important;border: none!important;"  href="#" id="resendOtp">Resend</a></p>
+                    {% comment %} <p class="otp-timer"></p> {% endcomment %}
+                  </div>
+                </div>
+
+                {% comment %} <button onclick="handlePopupCAclick(event)">Get OTP</button> {% endcomment %}
+                {% comment %} <button id="sendOtpButton">Send OTP</button> {% endcomment %}
+                <button id="otpButton">Test Button</button>
+                <div class="popup-footer">
+                    <div class="points-sec">
+                      <div class="section-left">
+                        <p><b>1AED = 1 POINT </b> <br> Use Club Apparel Point</p>
+                      </div>
+                      <div class="section-center"> <img src="https://cdn.shopify.com/s/files/1/0651/5815/2438/files/Group18.png?v=1735545994" alt="Group 9"></div>
+                      <div class="section-right">
+                        <p><b>EARN POINTS </b> <br> Points On Every Purchase</p>
+                      </div>
+                    </div>
+          
+{% comment %}           
+                    <div class="popup-policy">
+                      <p>By signing in, you agreeing to our <a href="#">T&amp;Cs</a> and <a href="#">privacy policy</a>.</p>
+                    </div>
+        {% endcomment %}
+
+                  </div>
+
+
+                <div id="popupCreateCustomer">
+                    <div class="input-with-code-2">
+                       <label for="popupEmail">Enter your otp</label>
+                       <input style="outline:none!important;border: 1px solid #CDCDCD!important; " type="text" id="otp2" >
+                       <span class="icon-2"><img src="https://cdn.shopify.com/s/files/1/0651/5815/2438/files/Vector_09c0cb41-80ca-4a93-8c4c-b1707eed7e2e.png"></span>
+                   </div>
+                    <div class="otp-timer-section"> 
+                        <p>Didn't receive OTP? <a style="outline:none!important;border: none!important;" href="#" id="resendOtp_2">Resend</a></p>
+                        {% comment %} <p class="otp-timer"></p> {% endcomment %}
+                    </div>
+                    <label for="popupEmail">Email</label>
+                    <input style="outline:none!important;border: 1px solid #CDCDCD!important; " type="email" id="popupEmail" >
+                    <button id="submit-button" onclick="createPopupCustomer(event)" disabled>Submit</button>
+                </div>
+
+          <div class="popup-policy">
+                      <p>By signing in, you agreeing to our 
+                        <a style="outline:none!important;border: none!important;" href="https://clubapparel.com/terms-conditions">T&amp;Cs</a> & 
+                        <a style="outline:none!important;border: none!important;" href="https://clubapparel.com/privacy-policy">privacy policy</a>.
+                    </p>
+                    </div>
+
+    <div class="download-app-section hide-app">
+        <p class="download-heading">Download the App and update your profile to redeem your points!</p>
+        <p class="download-link"><a href="https://appemirates.page.link/app" target="_blank" style="text-decoration:underline;">Click Here</a></p>
+    </div>
+ 
+            </div>
+            <div id="loader" class="loader-overlay_1" style="display: none;">
+                <div class="loader_1"></div>
+            </div>
+            
+        </div>
+       
+    </div>
+    <div id="errorContainer"  style="display: none;">
+    <div class="error-container">
+    <div class="close-error-div">
+    <div class="error-content">
+    <h3><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+<path d="M2.20164 18.4695L10.1643 4.00506C10.9021 2.66498 13.0979 2.66498 13.8357 4.00506L21.7984 18.4695C22.4443 19.6428 21.4598 21 19.9627 21H4.0373C2.54022 21 1.55571 19.6428 2.20164 18.4695Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M12 9V13" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M12 17.0195V17" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</h3>
+    <p id="errorMessage"></p>
+    </div>
+   
+   <button style="outline:none!important;border: none!important;" id="closeErrorButton">x</button>
+   </div>
+   </div>
+</div>
+
+</div>
+<div id="profileModal" class="modals profile-modal">
+    <div class="profile-modal-content">
+        <span class="close-profile-modal" onclick="closeProfileModal()"
+          > 
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
+<path d="M11.421 1L1 11.421" stroke="white" stroke-linecap="round"/>
+<path d="M1.49627 1L11.9172 11.421" stroke="white" stroke-linecap="round"/>
+</svg>
+          </span
+        >
+        <p class="profile-modal-heading">YOUR REWARD POINTS</p>
+        <div class="profile-modal-subData">
+          <img class="rank-logo" alt="rank-logo"src="https://cdn.shopify.com/s/files/1/0651/5815/2438/files/CA-Tiers__002__1-removebg-preview_1.png?v=1739510071"/>
+          <p class="profile-modal-points">AED <span class="my-points" >0</span></p>
+          <p class="profile-modal-balance" >Your Points Balance <b>AED <span id="modalPointBalance"></span></b></p>
+            <!-- <p class="profile-modal-balance">Your Points Balance AED
+                <b><span id="modalPointBalance"></span></b>
+            </p> -->
+         
+
+            <div class="range-container">
+                <input style="outline:none!important;border: 1px solid #CDCDCD!important; " type="range" id="rangeSlider" min="0" max="3500" value="0">
+                <div class="tooltip" id="tooltip">0</div>
+            </div>
+            <div class="rank-line" ></div>
+            <p class="profile-modal-ph">Phone No : <span id="modalPhoneNumber"></span></p>
+            <a class="incomplete-profile-messege" href="https://appemirates.page.link/app"></a>
+        
+            
+
+            <button class="profile-modal-dis-btn"  id="applyDiscountBtn" onclick="applyDiscount()">Apply Discount</button>
+<input style="outline:none!important;border: 1px solid #CDCDCD!important; " type="hidden" id="hiddenPhoneNumber" name="hiddenPhoneNumber">
+
+        </div>
+    </div>
+ </div>
+
+
+
+<div class="capopupmain" style="display:none">
+    <div class="mycontainer" style="border: 1px solid #e2e2e2; padding: 10px; display: flex; flex-direction: column;">
+        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+            <div style="flex: 1;">
+            <div class="testing-div">
+                <span style="font-size: 14px;">
+                    <a style="outline:none!important;border: none!important;" href="#" class="myclickbuttonn" onclick="openPopup(event)">Link</a> 
+                    your CA Account to Redeem
+                </span>
+                <img src="https://cdn.shopify.com/s/files/1/0651/5815/2438/files/image_4.png?v=1739449329" alt="Logo" style="width: 42px; height: 42px;" />
+                </div>
+                <div class="cart-ca-points">
+                <div  class="ca-green-points">
+                    You will get <span id="ca-points" style="font-weight: bold;">CA points</span> on this purchase
+                </div>
+                </div>
+            </div>
+            <div>
+            </div>
+        </div>
+        <div style="display: none; align-items: center; gap: 10px;">
+            <input style="outline:none!important;border: 1px solid #CDCDCD!important; " type="text" id="phoneNumber" placeholder="Enter phone number" style="flex: 1; padding: 5px; border: 1px solid #ccc; border-radius: 4px;" />
+            <button onclick="handleCAclick(event)" style="padding:6px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                Check
+            </button>
+        </div>
+        <div id="createCustomerPopup" style="display: none; flex-direction: column; margin-top: 10px; border: 1px solid #ccc; padding: 10px; background: #f9f9f9;">
+            <h3>Create New Customer</h3>
+            <input style="outline:none!important;border: 1px solid #CDCDCD!important; " type="email" id="email" placeholder="Email" style="margin-bottom: 5px; padding: 5px; border: 1px solid #ccc; border-radius: 4px;" />
+            <button onclick="createCustomer(event)" style="padding: 6px; background-color: #228B22; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                Submit
+            </button>
+        </div>
+    </div>
+</div>
+{{ 'app-embed-block.js' | asset_url | script_tag }}
+<script>
+
+
+</script>
+
+
+{% schema %}
+  {
+    "name": "App Embed",
+    "target": "body",
+    "settings": []
+  }
+{% endschema %} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

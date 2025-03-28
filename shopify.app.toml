@@ -1,0 +1,29 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "ea39dd1ecda9f6e2333d1f6562c0c293"
+application_url = "https://memorial-exclusively-game-mood.trycloudflare.com"
+embedded = true
+name = "ClubApparel"
+handle = "clubapparel-1"
+
+[webhooks]
+api_version = "2025-01"
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "read_content,read_online_store_pages,read_products,read_themes,write_content,write_online_store_pages,write_products,write_script_tags,write_theme_code,write_themes,read_customers,write_customers,read_customers,read_orders, read_checkouts, write_customers, write_orders, write_checkouts,read_price_rules,write_price_rules,read_discounts,read_returns,write_discounts,write_gift_cards"
+
+[auth]
+redirect_urls = [
+  "https://memorial-exclusively-game-mood.trycloudflare.com/auth/callback",
+  "https://memorial-exclusively-game-mood.trycloudflare.com/auth/shopify/callback",
+  "https://memorial-exclusively-game-mood.trycloudflare.com/api/auth/callback"
+]
+
+[pos]
+embedded = false
+
+[build]
+dev_store_url = "development-for-experiments.myshopify.com"
+automatically_update_urls_on_dev = true
+include_config_on_deploy = true
