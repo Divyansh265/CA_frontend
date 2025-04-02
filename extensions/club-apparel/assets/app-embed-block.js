@@ -21,38 +21,42 @@ document.getElementById('otp2').addEventListener('input', function (e) {
 document.addEventListener("DOMContentLoaded", () => {
     function appendContent() {
         let content = document.querySelector('.capopupmain')?.innerHTML;
-        let cartDrawerItems = document.querySelector("cart-drawer-items"); // Select first match
+        let cartDrawerItems = document.querySelector("cart-drawer-items");
 
         if (cartDrawerItems && content) {
-            // Remove existing popup if already present
-            let existingPopup = document.querySelector(".loyaltyPopup");
-            if (existingPopup) {
-                existingPopup.remove();
+            let popup = document.querySelector(".loyaltyPopup");
+            if (!popup) {
+                popup = document.createElement("div");
+                popup.classList.add("loyaltyPopup");
+                cartDrawerItems.insertAdjacentElement("afterend", popup);
             }
-
-            let newDiv = document.createElement("div");
-            newDiv.innerHTML = content;
-            newDiv.classList.add("loyaltyPopup"); // Add a class for styling
-            cartDrawerItems.insertAdjacentElement("afterend", newDiv);
+            popup.innerHTML = content;
         }
     }
 
-    // Run on page load
-    appendContent();
-    const giftCardBalance = localStorage.getItem("giftCardBalance");
+    function updateDiscountMessage(balance) {
+        const messageElement = document.querySelector("#discount-message");
+        if (messageElement) {
+            messageElement.textContent = `You have ${balance} AED available in your gift card balance.`;
+        }
+    }
 
+    // Retrieve tierCode from localStorage or set a default
+    let tierCode = localStorage.getItem("tierCode");
+
+    appendContent();
+
+    const giftCardBalance = localStorage.getItem("giftCardBalance");
     if (giftCardBalance !== null && giftCardBalance !== undefined) {
         const balanceInt = Math.floor(Number(giftCardBalance));
         updateDiscountMessage(balanceInt);
     }
 
-
-    // Ensure the close button exists before adding an event listener
-    let closeBtn = document.getElementById('closePopupBtn');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', closePopup);
-    }
-
+    document.addEventListener("click", (event) => {
+        if (event.target && event.target.id === "closePopupBtn") {
+            document.querySelector(".loyaltyPopup")?.remove();
+        }
+    });
 
     async function cardPercentageCalculation() {
         if (!tierCode) return;
@@ -70,27 +74,18 @@ document.addEventListener("DOMContentLoaded", () => {
             let totalCalculatedAmount = 0;
 
             cart.items.forEach(item => {
-                if (item.title === "Cash on Delivery fee") return; // Skip this item
+                if (item.title === "Cash on Delivery fee") return;
 
-                let originalPriceKey = '_Orignal price'; // Key to check in item properties
+                let originalPriceKey = '_Orignal price';
                 let percentage = (item.properties && item.properties[originalPriceKey])
                     ? 0.01
-                    : tierPercentages[tierCode];
+                    : tierPercentages[tierCode] || 0.02;
 
                 let calculatedAmount = item.original_line_price * percentage;
                 totalCalculatedAmount += calculatedAmount;
-
-                console.log(`Item: ${item.product_title}`);
-                console.log(`Original Line Price: ${item.original_line_price / 100} AED`);
-                console.log(`Applied Percentage: ${percentage * 100}%`);
-                console.log(`Calculated Amount: ${calculatedAmount / 100} AED`);
-                console.log('--------------------------------');
             });
 
-            let value = totalCalculatedAmount / 100;
-            let roundedValue = Math.round(value);
-
-            console.log("Total Additional Calculated Amount:", roundedValue, "AED");
+            let roundedValue = Math.round(totalCalculatedAmount / 100);
 
             const caPointsElement = document.querySelector("#ca-points");
             if (caPointsElement) {
@@ -100,8 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Error fetching cart data:", error);
         }
     }
-
-
 
     (function () {
         var originalFetch = window.fetch;
@@ -117,11 +110,9 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     })();
 
-
-    // Listen for Add to Cart form submissions
     document.body.addEventListener("submit", (event) => {
         if (event.target.matches('form[action="/cart/add"]')) {
-            setTimeout(appendContent, 1000); // Delay to ensure cart updates first
+            setTimeout(appendContent, 1000);
         }
     });
 });
@@ -295,6 +286,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Retrieve profile data from local storage
     const profileData = localStorage.getItem("profileData");
+
     if (profileData) {
         let rankLogoUrl = "";
         let profilePercentage = ""
@@ -359,44 +351,78 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log("profileData.TierCode", profileData.TierCode)
             const giftCardBalance = localStorage.getItem("giftCardBalance");
             if (giftCardBalance) {
+
                 if (tierCode) {
                     let tierPercentages = {
                         "SILVER": 0.02,
                         "GOLD": 0.03,
                         "BLACK": 0.05
                     };
+
                     fetch('/cart.js')
                         .then(response => response.json())
                         .then(cart => {
                             let totalCalculatedAmount = 0;
+                            let hasOriginalPriceProperty = false;
+                            let allHaveOriginalPriceProperty = true; // Assume all items have it until proven otherwise
 
                             cart.items.forEach(item => {
                                 if (item.title === "Cash on Delivery fee") {
                                     return; // Skip this item
                                 }
 
-                                let originalPriceKey = '_Orignal price'; // Key to check in item properties
-                                let percentage = (item.properties && item.properties[originalPriceKey])
-                                    ? 0.01
-                                    : tierPercentages[tierCode]; // Correct lookup
+                                let finalPrice = item.final_line_price || 0; // Ensure final_line_price exists
+                                let originalPriceKey = '_Orignal price';
+                                let hasOriginalProperty = item.properties && item.properties[originalPriceKey];
 
-                                let calculatedAmount = item.original_line_price * percentage;
+                                if (hasOriginalProperty) {
+                                    hasOriginalPriceProperty = true;
+                                } else {
+                                    allHaveOriginalPriceProperty = false;
+                                }
+
+
+
+                                let percentage = hasOriginalProperty ? 0.01 : tierPercentages[tierCode] || 0;
+
+                                // Step 1: Subtract percentage from final_price
+                                let discountedPrice = finalPrice * (1 - percentage);
+
+                                // Step 2: Get percentage from the new result
+                                let calculatedAmount = discountedPrice * percentage;
+
                                 totalCalculatedAmount += calculatedAmount;
+
                                 console.log(`Item: ${item.product_title}`);
-                                console.log(`Original Line Price: ${item.original_line_price / 100} AED`);
-                                console.log(`Applied Percentage: ${percentage * 100}%`);
-                                console.log(`Calculated Amount: ${calculatedAmount / 100} AED`);
+                                console.log(`Final Line Price: ${(finalPrice / 100).toFixed(2)} AED`);
+                                console.log(`Discounted Price After First Deduction: ${(discountedPrice / 100).toFixed(2)} AED`);
+                                console.log(`Final Calculated Amount (1% or tier % of new price): ${(calculatedAmount / 100).toFixed(2)} AED`);
                                 console.log('--------------------------------');
                             });
 
-                            let value = totalCalculatedAmount / 100;
-                            let roundedValue = Math.round(value);
 
-                            console.log("Total Additional Calculated Amount:", roundedValue, "AED");
+                            if (!hasOriginalPriceProperty) {
+                                console.log("No items in the cart have the '_Orignal price' property. Using tier percentages for all.");
+                            } else if (allHaveOriginalPriceProperty) {
+                                console.log("All items have '_Orignal price'. Applying 1% for all.");
+                            } else {
+                                console.log("Some items have '_Orignal price', some don't. Applying mixed calculation.");
+                            }
+
+                            let roundedValue = Math.round(totalCalculatedAmount / 100);
+
+
+                            const sliderValueBalance = Math.floor(giftCardBalance)
+                            const cartTotal = (cart.total_price / 100).toFixed(2)
+                            const totalPEPts = cartTotal - sliderValueBalance
+                            const finalPoints = totalPEPts / cartTotal;
+                            console.log(finalPoints)
+                            const resultPoints = Math.floor(finalPoints * roundedValue)
+                            console.log("Total Additional Calculated Amount:", resultPoints, "AED");
 
                             const caPointsElement = document.querySelector("#ca-points");
                             if (caPointsElement) {
-                                caPointsElement.innerHTML = `<span style="font-weight: bold;">${roundedValue} AED</span> CA points`;
+                                caPointsElement.innerHTML = `<span style="font-weight: bold;">${resultPoints} AED</span> CA points`;
                             }
                         })
                         .catch(error => console.error("Error fetching cart data:", error));
@@ -729,48 +755,86 @@ async function applyDiscount() {
         const tierCode = profileObject.TierCode
         console.log("tierCode", tierCode)
 
+
+        const onapplypointAmount = profileObject?.JsonExternalData?.PointBalance?.[0]?.PointAmount || 0;
+
+
         if (tierCode) {
             let tierPercentages = {
                 "SILVER": 0.02,
                 "GOLD": 0.03,
                 "BLACK": 0.05
             };
+
             fetch('/cart.js')
                 .then(response => response.json())
                 .then(cart => {
                     let totalCalculatedAmount = 0;
+                    let hasOriginalPriceProperty = false;
+                    let allHaveOriginalPriceProperty = true; // Assume all items have it until proven otherwise
 
                     cart.items.forEach(item => {
                         if (item.title === "Cash on Delivery fee") {
                             return; // Skip this item
                         }
 
-                        let originalPriceKey = '_Orignal price'; // Key to check in item properties
-                        let percentage = (item.properties && item.properties[originalPriceKey])
-                            ? 0.01
-                            : tierPercentages[tierCode]; // Correct lookup
+                        let finalPrice = item.final_line_price || 0; // Ensure final_line_price exists
+                        let originalPriceKey = '_Orignal price';
+                        let hasOriginalProperty = item.properties && item.properties[originalPriceKey];
 
-                        let calculatedAmount = item.original_line_price * percentage;
+                        if (hasOriginalProperty) {
+                            hasOriginalPriceProperty = true;
+                        } else {
+                            allHaveOriginalPriceProperty = false;
+                        }
+
+
+
+                        let percentage = hasOriginalProperty ? 0.01 : tierPercentages[tierCode] || 0;
+
+                        // Step 1: Subtract percentage from final_price
+                        let discountedPrice = finalPrice * (1 - percentage);
+
+                        // Step 2: Get percentage from the new result
+                        let calculatedAmount = discountedPrice * percentage;
+
                         totalCalculatedAmount += calculatedAmount;
+
                         console.log(`Item: ${item.product_title}`);
-                        console.log(`Original Line Price: ${item.original_line_price / 100} AED`);
-                        console.log(`Applied Percentage: ${percentage * 100}%`);
-                        console.log(`Calculated Amount: ${calculatedAmount / 100} AED`);
+                        console.log(`Final Line Price: ${(finalPrice / 100).toFixed(2)} AED`);
+                        console.log(`Discounted Price After First Deduction: ${(discountedPrice / 100).toFixed(2)} AED`);
+                        console.log(`Final Calculated Amount (1% or tier % of new price): ${(calculatedAmount / 100).toFixed(2)} AED`);
                         console.log('--------------------------------');
                     });
 
-                    let value = totalCalculatedAmount / 100;
-                    let roundedValue = Math.round(value);
 
-                    console.log("Total Additional Calculated Amount:", roundedValue, "AED");
+                    if (!hasOriginalPriceProperty) {
+                        console.log("No items in the cart have the '_Orignal price' property. Using tier percentages for all.");
+                    } else if (allHaveOriginalPriceProperty) {
+                        console.log("All items have '_Orignal price'. Applying 1% for all.");
+                    } else {
+                        console.log("Some items have '_Orignal price', some don't. Applying mixed calculation.");
+                    }
+
+                    let roundedValue = Math.round(totalCalculatedAmount / 100);
+
+
+
+                    const cartTotal = (cart.total_price / 100).toFixed(2)
+                    const totalPEPts = cartTotal - sliderValue
+                    const finalPoints = totalPEPts / cartTotal;
+                    console.log(finalPoints)
+                    const resultPoints = Math.floor(finalPoints * roundedValue)
+                    console.log("Total Additional Calculated Amount:", resultPoints, "AED");
 
                     const caPointsElement = document.querySelector("#ca-points");
                     if (caPointsElement) {
-                        caPointsElement.innerHTML = `<span style="font-weight: bold;">${roundedValue} AED</span> CA points`;
+                        caPointsElement.innerHTML = `<span style="font-weight: bold;">${resultPoints} AED</span> CA points`;
                     }
                 })
                 .catch(error => console.error("Error fetching cart data:", error));
         }
+
 
 
 
@@ -1877,6 +1941,8 @@ async function handlePopupCAclick(event) {
     }
 }
 
+
+
 async function createPopupCustomer(event) {
     event.preventDefault();
 
@@ -1885,65 +1951,60 @@ async function createPopupCustomer(event) {
 
     if (!email || !phoneNo) {
         showError('Please fill in all required fields.');
-        // alert('Please fill in all required fields.');
         return;
     }
 
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
         showError('Please enter a valid email address.');
-        //  alert('Please enter a valid email address.');
         return;
     }
 
     let phone = phoneNo.startsWith('971') ? phoneNo : `971${phoneNo}`;
+    const checkShopifyUrl = `/apps/caapi/api/shopify/customers/${phone}`;
 
-    /*  if (!/^\+\d{10,15}$/.test(phone)) {
-         alert('Please enter a valid phone number with country code.');
-         return;
-      }*/
-
-    //  const shopifyApiUrl = 'https://stevemadden-me-dev.myshopify.com/admin/api/2024-01/customers.json';
-    // const shopifyApiUrl=`/apps/caapi/create-customer`
-    const shopifyApiUrl = `/apps/caapi/api/shopify/customers`
-    const shopifyPayload = {
-        email,
-        phone: phone
-    };
-    console.log("shopifyPayload", shopifyPayload)
     try {
-        // showLoader();
-
-        // Create customer in Shopify
-        const shopifyResponse = await fetch(shopifyApiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // 'X-Shopify-Access-Token': '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'
-            },
-            body: JSON.stringify(shopifyPayload)
+        console.log("Checking Shopify for customer...");
+        const shopifyCheckResponse = await fetch(checkShopifyUrl, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
         });
 
-        if (!shopifyResponse.ok) {
-            const shopifyErrorData = await shopifyResponse.json();
-            console.error('Failed to create customer in Shopify:', shopifyErrorData);
-            showError(`Failed to create customer in Shopify. Error: ${JSON.stringify(shopifyErrorData.errors)}`);
-            // alert(`Failed to create customer in Shopify. Error: ${JSON.stringify(shopifyErrorData.errors)}`);
-            // hideLoader();
-            return;
+        let shopifyCustomerExists = false;
+        if (shopifyCheckResponse.ok) {
+            const shopifyData = await shopifyCheckResponse.json();
+            shopifyCustomerExists = shopifyData && shopifyData.customers && shopifyData.customers.length > 0;
         }
 
-        console.log('Customer created successfully in Shopify.');
+        if (!shopifyCustomerExists) {
+            const shopifyApiUrl = `/apps/caapi/api/shopify/customers`;
+            const shopifyPayload = { email, phone };
+            console.log("Creating customer in Shopify", shopifyPayload);
 
-        // Create customer in CA API
+            const shopifyResponse = await fetch(shopifyApiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(shopifyPayload)
+            });
+
+            if (!shopifyResponse.ok) {
+                const shopifyErrorData = await shopifyResponse.json();
+                console.error('Failed to create customer in Shopify:', shopifyErrorData);
+                showError(`Failed to create customer in Shopify. Error: ${JSON.stringify(shopifyErrorData.errors)}`);
+                return;
+            }
+            console.log('Customer created successfully in Shopify.');
+        }
+
         const caApiUrl = 'https://ca.stevemadden.sa/api/epsilon/profiles';
         const caPayload = {
             Emails: [{ EmailAddress: email }],
-            Phones: [{ PhoneNumber: `971${phoneNo}`, PhoneCountryCode: "AE" }],
+            Phones: [{ PhoneNumber: phone, PhoneCountryCode: "AE" }],
             SourceCode: "APP",
             EnrollChannelCode: "APP",
             JsonExternalData: { IsPhoneVerified: "true", IsEmailVerified: "true" }
         };
 
+        console.log("Creating customer in CA API", caPayload);
         const caResponse = await fetch(caApiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -1953,28 +2014,21 @@ async function createPopupCustomer(event) {
         if (!caResponse.ok) {
             const caErrorData = await caResponse.json();
             console.error('Failed to create customer in CA API:', caErrorData);
-            showError(`Failed to create customer in CA API. Error: ${JSON.stringify(caErrorData.errors)}`)
-            // alert(`Failed to create customer in CA API. Error: ${JSON.stringify(caErrorData.errors)}`);
-            // hideLoader();
+            showError(`Failed to create customer in CA API. Error: ${JSON.stringify(caErrorData.errors)}`);
             return;
         }
-
-
-
         console.log('Customer created successfully in CA API.');
-        // localStorage.setItem('profileData', JSON.stringify(profileData));
-        //  localStorage.setItem('profileFetchTime', new Date().getTime());
+
         await fetchAndShowProfile(phoneNo);
         await closePopup();
 
     } catch (error) {
         console.error('Error occurred:', error);
-        showError('An error occurred. Check console for details.')
-        //alert('An error occurred. Check console for details.');
-    } finally {
-        // hideLoader();
+        showError('An error occurred. Check console for details.');
     }
 }
+
+
 
 // Function to fetch profile data from CA API and update modal
 async function fetchAndShowProfile(phoneNumber) {
